@@ -1,1 +1,33 @@
+import numpy as np
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
+#load the array
+shape_array = np.load('shape_array.npy')
+scale=StandardScaler()
+shape_array=scale.fit_transform(shape_array)
+#do the pca
+pca = PCA(n_components=7)
+pca.fit(shape_array)
+#get the components
+principal_components = pca.components_
+#get the variance ratio
+explained_variance = pca.explained_variance_
+#get the new pca coordinates
+new_coordinates_pca = pca.transform(shape_array)
 
+#get the covariance matrix
+covariance_matrix = np.cov(shape_array,rowvar=False)
+
+#use eigendecomposition on the covariance matrix
+eigenvalues, eigenvectors = np.linalg.eigh(covariance_matrix)
+
+#sorting the values and the vectors in ascending order
+sorted_eigenvalues = np.sort(eigenvalues)[::-1]
+sorted_eigenvectors = eigenvectors[:, ::-1]
+
+print("PCA Explained variance: \n", explainedVariance)
+print("\nEigenvalues: \n",sorted_eigenvalues)
+
+#new coordinates of all the shapes using eigendecomposition
+new_coordinates_eigendecomposition = np.dot(shape_array, sorted_eigenvectors)
+print("\nNew coordinates from eigendecomposition: \n",new_coordinates_eigendecomposition)
